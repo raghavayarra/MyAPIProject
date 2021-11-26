@@ -11,17 +11,20 @@ from rest_framework.response import Response
 @api_view(['GET'])
 
 def showall(request):
-    post=Post.objects.all()
-
     url=request.query_params['url']
-    if url != None:
-        post = Post.objects.get(url=url)
-        serializer=PostSerializer(post)
-        return Response({'message':" This is malware url"})
-
-    else:
-        serializer=PostSerializer(post,many=True)
-        return Response(serializer.data)
+    
+    post = Post.objects.all()
+    
+    
+    try:
+        posts =request.query_params['url']
+        if url in posts:
+            post = Post.objects.get(url=url)
+            serializer=PostSerializer(post)
+            return Response({'message':" This is malware url"})
+            
+    except:
+        return Response({'message':" url is allowed"})
 
 
 @api_view(['POST'])
